@@ -23,6 +23,7 @@ El juego usa una lista bidimensional (map) para representar el mundo:
 3. "f" representa frutas (🍒).
 4. "@" representa al jugador (😃).
 <br>
+
 ```
 map = [
     [".",".","#",".",".","."],
