@@ -4,12 +4,13 @@
 
 ## ⚡️ Tutorial: Crear un Juego de Maze en Python ⚡️
 
-Este tutorial está diseñado para principiantes que quieran aprender a programar un juego simple basado en una cuadrícula (tile-based game) usando Python. En este juego, un jugador se mueve por un mapa para recoger frutas mientras evita paredes. Usaremos la biblioteca keyboard para capturar las teclas y la consola para mostrar el juego.
+Este tutorial está diseñado para principiantes que quieran aprender a programar un juego simple basado en una cuadrícula (tile-based game) usando Python.
+En este juego, un jugador se mueve por un mapa para recoger frutas mientras evita paredes. Usaremos la biblioteca keyboard para capturar las teclas y la consola para mostrar el juego.
 Requisitos previos
 
-Conocimientos básicos de Python (variables, bucles, funciones).
-Python instalado en tu sistema.
-La biblioteca keyboard instalada (pip install keyboard).
+Conocimientos básicos de Python (variables, bucles, funciones). <br>
+Python instalado en tu sistema. <br>
+La biblioteca keyboard instalada (pip install keyboard). <br>
 
 
 Nota: La biblioteca keyboard puede requerir permisos de administrador en algunos sistemas.
@@ -17,13 +18,11 @@ Nota: La biblioteca keyboard puede requerir permisos de administrador en algunos
 ## Paso 1: Configurar el mapa del juego
 El juego usa una lista bidimensional (map) para representar el mundo:
 
-1. . representa espacios vacíos (⬜).
+1. "." representa espacios vacíos (⬜).
 2. "#" representa paredes (🧱).
-3. 1. f representa frutas (🍒).
-4. 2. @ representa al jugador (😃).
+3. "f" representa frutas (🍒).
+4. "@" representa al jugador (😃).
 <br>
-<br>
-
 ```
 map = [
     [".",".","#",".",".","."],
@@ -148,4 +147,89 @@ Ejecuta el script en un entorno Python con keyboard instalado.
 2. Recoge todas las frutas (🍒) para ganar (3 frutas en este mapa).
 3. Evita las paredes (🧱).
 4. Presiona Q para salir.
+<br>
+
+## Código completo 📜
+```
+import os
+import keyboard
+
+map = [
+    [".",".","#",".",".","."],
+    ["#",".",".","#","f","."],
+    [".",".",".",".",".","."],
+    [".",".","#",".","#","."],
+    ["#",".","f",".","f","."],
+    ["#",".",".",".",".","."],
+]
+
+size_rows = 5
+size_cols = 5
+avatar_y = 2
+avatar_x = 1
+counting_fruits = 0
+
+def fn_clear_map():
+    os.system("cls" if os.name == "nt" else "clear")
+
+def fn_render_map():
+    fn_clear_map()
+    for rows in map:
+        tiles = []
+        for cols in rows:
+            if cols == ".":
+               tiles.append("⬜")
+            if cols == "#":
+               tiles.append("🧱")
+            if cols == "@":
+               tiles.append("😃")
+            if cols == "f":
+               tiles.append("🍒")
+            if cols == "g":
+               tiles.append("🎁")
+        print(" ".join(tiles))
+    print(f"Frutas recogidas: {counting_fruits}")
+
+def fn_move_avatar():
+    global avatar_x, avatar_y, counting_fruits
+    new_x = avatar_x
+    new_y = avatar_y
+
+    while True:
+        event = keyboard.read_event(suppress=True)
+        if event.event_type == keyboard.KEY_DOWN:
+            if event.name == "w":
+               new_y -= 1
+            elif event.name == "s":
+               new_y += 1
+            elif event.name == "a":
+               new_x -= 1
+            elif event.name == "d":
+               new_x += 1
+            elif event.name == "q":
+               print("Juego terminado")
+               break
+            if (new_x >= 0 and new_x <= size_rows and new_y >= 0 and new_y <= size_cols and map[new_y][new_x] != "#"):
+                map[avatar_y][avatar_x] = "."
+                avatar_x = new_x
+                avatar_y = new_y
+                if map[avatar_y][avatar_x] == "f":
+                    counting_fruits += 1
+                if counting_fruits == 3:
+                    fn_render_map()
+                    break
+                map[avatar_y][avatar_x] = "@"
+            else:
+                new_x = avatar_x
+                new_y = avatar_y
+            fn_render_map()
+
+if __name__ == "__main__":
+    fn_render_map()
+    fn_move_avatar()
+```
+<br>
+
+---
+<h3 align="center">SOCIAL OPLESK</h3>
 
