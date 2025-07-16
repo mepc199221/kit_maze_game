@@ -22,16 +22,20 @@ El juego usa una lista bidimensional (map) para representar el mundo:
 2. "#" representa paredes (🧱).
 3. "f" representa frutas (🍒).
 4. "@" representa al jugador (😃).
+5. "g" representa regalo (🎁).
+6. "e" representa manzanda (🍎).
+7. "c" representa naranja (🍊).
+8. "p" representa piña (🍍).
 <br>
 
 ```
 map = [
-    [".",".","#",".",".","."],
-    ["#",".",".","#","f","."],
-    [".",".",".",".",".","."],
-    [".",".","#",".","#","."],
-    ["#",".","f",".","f","."],
-    ["#",".",".",".",".","."],
+    [".",".","#",".",".","p"],
+    ["#",".",".","#","f","p"],
+    [".",".",".",".",".","p"],
+    [".","e","#",".","#","c"],
+    ["#","e","f",".","f","c"],
+    ["#","e",".",".",".","c"],
 ]
 ```
 
@@ -42,6 +46,10 @@ size_cols = 5
 avatar_y = 2
 avatar_x = 1
 counting_fruits = 0
+counting_apple = 0
+counting_orange = 0
+counting_pineapple = 0
+limit = 0
 ```
 
 1. size_rows y size_cols establecen los límites del mapa.
@@ -76,6 +84,12 @@ def fn_render_map():
                tiles.append("🍒")
             if cols == "g":
                tiles.append("🎁")
+            if cols == "e":
+               tiles.append("🍎")
+            if cols == "c":
+                tiles.append("🍊")
+            if cols == "p":
+                tiles.append("🍍")
         print(" ".join(tiles))
     print(f"Frutas recogidas: {counting_fruits}")
 ```
@@ -85,9 +99,10 @@ def fn_render_map():
 La función fn_move_avatar gestiona el movimiento del jugador y la lógica del juego: 
 1. Usa keyboard.read_event para detectar teclas (w, s, a, d para moverse; q para salir).
 2. Actualiza new_x y new_y según la tecla presionada.<br>
+3. ingrementa el limite por cada movimiento.
 ```
 def fn_move_avatar():
-    global avatar_x, avatar_y, counting_fruits
+    global avatar_x, avatar_y, counting_fruits, counting_apple, counting_orange, counting_pineapple, limit
     new_x = avatar_x
     new_y = avatar_y
 
@@ -96,15 +111,22 @@ def fn_move_avatar():
         if event.event_type == keyboard.KEY_DOWN:
             if event.name == "w":
                new_y -= 1
+               limit += 1
             elif event.name == "s":
                new_y += 1
+               limit += 1
             elif event.name == "a":
                new_x -= 1
+               limit += 1
             elif event.name == "d":
                new_x += 1
+               limit += 1
             elif event.name == "q":
                print("Juego terminado")
                break
+            if limit == 20:
+                print("Has alcanzado el límite de intentos. Juego terminado. 😵")
+                break
 ```
 
 ## Paso 5: Colisiones y recolección de frutas
@@ -115,20 +137,30 @@ La función también verifica movimientos válidos y recoge frutas:
 4. Termina el juego cuando se recogen 3 frutas.
 
 ```
-if (new_x >= 0 and new_x <= size_rows and new_y >= 0 and new_y <= size_cols and map[new_y][new_x] != "#"):
-    map[avatar_y][avatar_x] = "."
-    avatar_x = new_x
-    avatar_y = new_y
-    if map[avatar_y][avatar_x] == "f":
-        counting_fruits += 1
-    if counting_fruits == 3:
-        fn_render_map()
-        break
-    map[avatar_y][avatar_x] = "@"
-else:
-    new_x = avatar_x
-    new_y = avatar_y
-fn_render_map()
+            if (new_x >= 0 and new_x <= size_rows and new_y >= 0 and new_y <= size_cols and map[new_y][new_x] != "#"):
+                map[avatar_y][avatar_x] = "."
+                avatar_x = new_x
+                avatar_y = new_y
+                if map[avatar_y][avatar_x] == "f":
+                    counting_fruits += 1
+
+                if map[avatar_y][avatar_x] == "e":
+                    counting_apple += 1
+                
+                if map[avatar_y][avatar_x] == "c":
+                    counting_orange += 1
+
+                if map[avatar_y][avatar_x] == "p":
+                    counting_pineapple += 1
+
+                if counting_fruits == 3 and counting_apple == 3 and counting_orange == 3 and counting_pineapple == 3:
+                    fn_render_map()
+                    break
+                map[avatar_y][avatar_x] = "@"
+            else:
+                new_x = avatar_x
+                new_y = avatar_y
+            fn_render_map()
 ```
 
 
@@ -145,9 +177,10 @@ if __name__ == "__main__":
 ## Cómo jugar  💻🎮🕹️
 Ejecuta el script en un entorno Python con keyboard instalado.
 1. Usa W, A, S, D para mover al jugador (😃).
-2. Recoge todas las frutas (🍒) para ganar (3 frutas en este mapa).
+2. Recoge todas las frutas (🍒,🍎,🍊,🍍) para ganar (3 frutas en este mapa).
 3. Evita las paredes (🧱).
-4. Presiona Q para salir.
+4. Tiene un limite de pasos 20
+5. Presiona Q para salir.
 <br>
 
 ## Código completo 📜
@@ -156,12 +189,12 @@ import os
 import keyboard
 
 map = [
-    [".",".","#",".",".","."],
-    ["#",".",".","#","f","."],
-    [".",".",".",".",".","."],
-    [".",".","#",".","#","."],
-    ["#",".","f",".","f","."],
-    ["#",".",".",".",".","."],
+    [".",".","#",".",".","p"],
+    ["#",".",".","#","f","p"],
+    [".",".",".",".",".","p"],
+    [".","e","#",".","#","c"],
+    ["#","e","f",".","f","c"],
+    ["#","e",".",".",".","c"],
 ]
 
 size_rows = 5
@@ -169,6 +202,10 @@ size_cols = 5
 avatar_y = 2
 avatar_x = 1
 counting_fruits = 0
+counting_apple = 0
+counting_orange = 0
+counting_pineapple = 0
+limit = 0
 
 def fn_clear_map():
     os.system("cls" if os.name == "nt" else "clear")
@@ -188,11 +225,21 @@ def fn_render_map():
                tiles.append("🍒")
             if cols == "g":
                tiles.append("🎁")
+            if cols == "e":
+               tiles.append("🍎")
+            if cols == "c":
+                tiles.append("🍊")
+            if cols == "p":
+                tiles.append("🍍")
         print(" ".join(tiles))
-    print(f"Frutas recogidas: {counting_fruits}")
+    print(f"Frutas cerezas: {counting_fruits}")
+    print(f"Frutas manzanas: {counting_apple}")
+    print(f"Frutas naranja: {counting_orange}")
+    print(f"Frutas piña: {counting_pineapple}")
+    print(f"Limite de intentos: {limit}/20")
 
 def fn_move_avatar():
-    global avatar_x, avatar_y, counting_fruits
+    global avatar_x, avatar_y, counting_fruits, counting_apple, counting_orange, counting_pineapple, limit
     new_x = avatar_x
     new_y = avatar_y
 
@@ -201,22 +248,40 @@ def fn_move_avatar():
         if event.event_type == keyboard.KEY_DOWN:
             if event.name == "w":
                new_y -= 1
+               limit += 1
             elif event.name == "s":
                new_y += 1
+               limit += 1
             elif event.name == "a":
                new_x -= 1
+               limit += 1
             elif event.name == "d":
                new_x += 1
+               limit += 1
             elif event.name == "q":
                print("Juego terminado")
                break
+            if limit == 20:
+                print("Has alcanzado el límite de intentos. Juego terminado. 😵")
+                break
+
             if (new_x >= 0 and new_x <= size_rows and new_y >= 0 and new_y <= size_cols and map[new_y][new_x] != "#"):
                 map[avatar_y][avatar_x] = "."
                 avatar_x = new_x
                 avatar_y = new_y
                 if map[avatar_y][avatar_x] == "f":
                     counting_fruits += 1
-                if counting_fruits == 3:
+
+                if map[avatar_y][avatar_x] == "e":
+                    counting_apple += 1
+                
+                if map[avatar_y][avatar_x] == "c":
+                    counting_orange += 1
+
+                if map[avatar_y][avatar_x] == "p":
+                    counting_pineapple += 1
+
+                if counting_fruits == 3 and counting_apple == 3 and counting_orange == 3 and counting_pineapple == 3:
                     fn_render_map()
                     break
                 map[avatar_y][avatar_x] = "@"
@@ -233,4 +298,4 @@ if __name__ == "__main__":
 
 ---
 <h3 align="center">SOCIAL OPLESK</h3>
-
+<h3 align="center">Modificado por: Miguel Perez</h3>
