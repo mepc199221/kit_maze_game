@@ -59,8 +59,8 @@ def fn_clear_map():
 ## Paso 3: Mostrar el mapa
 1. Recorre el mapa y convierte los símbolos en emojis.
 2. Muestra la cantidad de frutas recogidas al final.
+3. La función fn_render_map muestra el mapa del juego:
 ```
-La función fn_render_map muestra el mapa del juego:
 def fn_render_map():
     fn_clear_map()
     for rows in map:
