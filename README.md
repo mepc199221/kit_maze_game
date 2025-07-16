@@ -1,4 +1,4 @@
-# SOCIAL OPLESK
+# Miguel Perez (modificado agregando las detalles de frutas y limites)
 ### 💼 KIT
 <br/>
 
