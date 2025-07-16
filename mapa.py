@@ -104,8 +104,8 @@ def fn_move_avatar():
 
                 if counting_fruits == 3 and counting_apple == 3 and counting_orange == 3 and counting_pineapple == 3:
                     print("¡Has ganado! 🎉")
-                    fn_render_map()
                     break
+                
                 map[avatar_y][avatar_x] = "@"
             else:
                 new_x = avatar_x
