@@ -4,7 +4,7 @@ import keyboard
 map = [
     [".",".","#",".",".","p"],
     ["#",".",".","#","f","p"],
-    [".",".",".",".",".","p"],
+    [".",".",".",".","t","p"],
     [".","e","#",".","#","c"],
     ["#","e","f",".","f","c"],
     ["#","e",".",".",".","c"],
@@ -32,6 +32,8 @@ def fn_render_map():
                tiles.append("⬜")
             if cols == "#":
                tiles.append("🧱")
+            if cols == "t":
+               tiles.append("🌳")
             if cols == "@":
                tiles.append("😃")
             if cols == "f":
@@ -74,11 +76,11 @@ def fn_move_avatar():
             elif event.name == "q":
                print("Juego terminado")
                break
-            if limit == 20:
+            if limit > 20:
                 print("Has alcanzado el límite de intentos. Juego terminado. 😵")
                 break
 
-            if (new_x >= 0 and new_x <= size_rows and new_y >= 0 and new_y <= size_cols and map[new_y][new_x] != "#"):
+            if (new_x >= 0 and new_x <= size_rows and new_y >= 0 and new_y <= size_cols and map[new_y][new_x] != "#" and map[new_y][new_x] != "t"):
                 map[avatar_y][avatar_x] = "."
                 avatar_x = new_x
                 avatar_y = new_y
