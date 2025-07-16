@@ -4,7 +4,7 @@ import keyboard
 map = [
     [".",".","#",".",".","p"],
     ["#",".",".","#","f","p"],
-    [".",".",".",".","t","p"],
+    ["b",".",".",".","t","p"],
     [".","e","#",".","#","c"],
     ["#","e","f",".","f","c"],
     ["#","e",".",".",".","c"],
@@ -46,6 +46,8 @@ def fn_render_map():
                 tiles.append("🍊")
             if cols == "p":
                 tiles.append("🍍")
+            if cols == "b":
+                tiles.append("💣")
         print(" ".join(tiles))
     print(f"Frutas cerezas: {counting_fruits}")
     print(f"Frutas manzanas: {counting_apple}")
@@ -96,7 +98,12 @@ def fn_move_avatar():
                 if map[avatar_y][avatar_x] == "p":
                     counting_pineapple += 1
 
+                if map[avatar_y][avatar_x] == "b":
+                    print("¡Has pisado una bomba! Juego terminado. 💣💥💥")
+                    break
+
                 if counting_fruits == 3 and counting_apple == 3 and counting_orange == 3 and counting_pineapple == 3:
+                    print("¡Has ganado! 🎉")
                     fn_render_map()
                     break
                 map[avatar_y][avatar_x] = "@"
