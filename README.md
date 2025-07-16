@@ -26,13 +26,15 @@ El juego usa una lista bidimensional (map) para representar el mundo:
 6. "e" representa manzanda (🍎).
 7. "c" representa naranja (🍊).
 8. "p" representa piña (🍍).
+9. "b" representa una bomba (💣).
+10. "t" representa un arbol (🌳).
 <br>
 
 ```
 map = [
     [".",".","#",".",".","p"],
     ["#",".",".","#","f","p"],
-    [".",".",".",".",".","p"],
+    ["b",".",".",".","t","p"],
     [".","e","#",".","#","c"],
     ["#","e","f",".","f","c"],
     ["#","e",".",".",".","c"],
@@ -78,6 +80,8 @@ def fn_render_map():
                tiles.append("⬜")
             if cols == "#":
                tiles.append("🧱")
+            if cols == "t":
+               tiles.append("🌳")
             if cols == "@":
                tiles.append("😃")
             if cols == "f":
@@ -90,8 +94,14 @@ def fn_render_map():
                 tiles.append("🍊")
             if cols == "p":
                 tiles.append("🍍")
-        print(" ".join(tiles))
-    print(f"Frutas recogidas: {counting_fruits}")
+            if cols == "b":
+                tiles.append("💣")
+           print(" ".join(tiles))
+    print(f"Frutas cerezas: {counting_fruits}")
+    print(f"Frutas manzanas: {counting_apple}")
+    print(f"Frutas naranja: {counting_orange}")
+    print(f"Frutas piña: {counting_pineapple}")
+    print(f"Limite de intentos: {limit}/20")
 ```
 
 
@@ -137,7 +147,7 @@ La función también verifica movimientos válidos y recoge frutas:
 4. Termina el juego cuando se recogen 3 frutas.
 
 ```
-            if (new_x >= 0 and new_x <= size_rows and new_y >= 0 and new_y <= size_cols and map[new_y][new_x] != "#"):
+if (new_x >= 0 and new_x <= size_rows and new_y >= 0 and new_y <= size_cols and map[new_y][new_x] != "#" and map[new_y][new_x] != "t"):
                 map[avatar_y][avatar_x] = "."
                 avatar_x = new_x
                 avatar_y = new_y
@@ -153,9 +163,14 @@ La función también verifica movimientos válidos y recoge frutas:
                 if map[avatar_y][avatar_x] == "p":
                     counting_pineapple += 1
 
-                if counting_fruits == 3 and counting_apple == 3 and counting_orange == 3 and counting_pineapple == 3:
-                    fn_render_map()
+                if map[avatar_y][avatar_x] == "b":
+                    print("¡Has pisado una bomba! Juego terminado. 💣💥💥")
                     break
+
+                if counting_fruits == 3 and counting_apple == 3 and counting_orange == 3 and counting_pineapple == 3:
+                    print("¡Has ganado! 🎉")
+                    break
+                
                 map[avatar_y][avatar_x] = "@"
             else:
                 new_x = avatar_x
@@ -179,8 +194,10 @@ Ejecuta el script en un entorno Python con keyboard instalado.
 1. Usa W, A, S, D para mover al jugador (😃).
 2. Recoge todas las frutas (🍒,🍎,🍊,🍍) para ganar (3 frutas en este mapa).
 3. Evita las paredes (🧱).
-4. Tiene un limite de pasos 20
-5. Presiona Q para salir.
+4. Evita los arboles (🌳).
+5. Evita las bombas (💣).
+6. Tiene un limite de pasos 20
+7. Presiona Q para salir.
 <br>
 
 ## Código completo 📜
@@ -191,7 +208,7 @@ import keyboard
 map = [
     [".",".","#",".",".","p"],
     ["#",".",".","#","f","p"],
-    [".",".",".",".",".","p"],
+    ["b",".",".",".","t","p"],
     [".","e","#",".","#","c"],
     ["#","e","f",".","f","c"],
     ["#","e",".",".",".","c"],
@@ -219,6 +236,8 @@ def fn_render_map():
                tiles.append("⬜")
             if cols == "#":
                tiles.append("🧱")
+            if cols == "t":
+               tiles.append("🌳")
             if cols == "@":
                tiles.append("😃")
             if cols == "f":
@@ -231,6 +250,8 @@ def fn_render_map():
                 tiles.append("🍊")
             if cols == "p":
                 tiles.append("🍍")
+            if cols == "b":
+                tiles.append("💣")
         print(" ".join(tiles))
     print(f"Frutas cerezas: {counting_fruits}")
     print(f"Frutas manzanas: {counting_apple}")
@@ -261,11 +282,11 @@ def fn_move_avatar():
             elif event.name == "q":
                print("Juego terminado")
                break
-            if limit == 20:
+            if limit > 20:
                 print("Has alcanzado el límite de intentos. Juego terminado. 😵")
                 break
 
-            if (new_x >= 0 and new_x <= size_rows and new_y >= 0 and new_y <= size_cols and map[new_y][new_x] != "#"):
+            if (new_x >= 0 and new_x <= size_rows and new_y >= 0 and new_y <= size_cols and map[new_y][new_x] != "#" and map[new_y][new_x] != "t"):
                 map[avatar_y][avatar_x] = "."
                 avatar_x = new_x
                 avatar_y = new_y
@@ -281,9 +302,14 @@ def fn_move_avatar():
                 if map[avatar_y][avatar_x] == "p":
                     counting_pineapple += 1
 
-                if counting_fruits == 3 and counting_apple == 3 and counting_orange == 3 and counting_pineapple == 3:
-                    fn_render_map()
+                if map[avatar_y][avatar_x] == "b":
+                    print("¡Has pisado una bomba! Juego terminado. 💣💥💥")
                     break
+
+                if counting_fruits == 3 and counting_apple == 3 and counting_orange == 3 and counting_pineapple == 3:
+                    print("¡Has ganado! 🎉")
+                    break
+                
                 map[avatar_y][avatar_x] = "@"
             else:
                 new_x = avatar_x
