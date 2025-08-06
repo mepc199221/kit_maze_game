@@ -181,7 +181,7 @@ proyecto/
 
 ## 🎯 Cómo Jugar
 
-1. **Ejecuta el script** en un entorno Python con las bibliotecas instaladas
+1. **Ejecuta el script** en un entorno Python con las bibliotecas instaladas (Recuerda ingresar a la versions "LTS" y inicia el main.py)
 2. **Navega por el menú** usando las teclas indicadas
 3. **Mueve tu avatar** (😃) usando W, A, S, D
 4. **Recolecta todas las frutas** requeridas en cada nivel:
